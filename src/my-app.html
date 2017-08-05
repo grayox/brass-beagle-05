@@ -10,6 +10,12 @@
 <link rel="import" href="my-icons.html">
 <link rel="import" href="common/header-bar.html">
 
+<link rel="import" href="user-action-module/user-action-module.html">
+<!---- >
+<link rel="import" href="user-action-module/user-dropdown-trigger.html">
+<link rel="import" href="user-action-module/user-dropdown-content.html">
+<!---->
+
 <dom-module id="my-app">
   <template>
     <style is="custom-style">
@@ -82,7 +88,7 @@
 				/** /
 				font-family: "Trebuchet MS", Helvetica, Tahoma, Geneva, 'Open Sans', Verdana, Roboto, Arial, sans-serif;
 				font-family: 'Open Sans';
-				font-family: 'Roboto';
+				font-familyodule';
 				/**/
 				font-family: var(--primary-font-family);
 				font-weight: 300;
@@ -94,11 +100,6 @@
         height: 100%;
         width: 100%;
 				
-      }
-
-      #logoandname {
-        display:none;
-        margin-bottom:20px;
       }
 
       .drawer-list {
@@ -198,37 +199,7 @@
         visibility: visible;
       }
 
-      #logo {
-        display: block;
-        width: 70px;
-        height: 70px;
-        margin: 24px auto;
-				/* Edit */
-				border-radius: 50%;
-				/* endEdit */
-		  }
-
-      #productname {
-				opacity: 0.6;
-        color: white;
-				font-size: 16px;
-        text-align: center;
-        /** /
-				font-weight: 400;
-        font: 400 16px 'Open Sans', Verdana, sans-serif;
-				text-transform: uppercase;
-        letter-spacing: 2px;
-        /**/
-      }
-			
 			/* Edit */
-			#logoandname:hover {
-				cursor: pointer;
-			}
-			#logoandname:hover #productname {
-				color: var(--app-primary-color);
-				opacity: 1.0;
-			}
 			.drop-arrow {
 				opacity: 0.4;
 				--iron-icon-height: 18px;
@@ -329,6 +300,10 @@
         --iron-icon-height: 24px;
         padding-right: 10px;
       }
+			
+			#logo {
+				height: 24px;
+			}
 			/* endEdit */
 
       #githubsource {
@@ -342,7 +317,10 @@
       }
 
       #githubsource a {
+				/** /
         color: #e5e8e8;
+				/**/
+				opacity 0.8;
         font-size: 12px;
         text-decoration: none;
         text-transform: uppercase;
@@ -351,7 +329,13 @@
       }
 
       #githublogo {
-        fill: #8b8e91;
+				/** /
+				--iron-icon {
+					--iron-icon-fill-color: white;
+				};
+				/**/
+        fill: white;
+				/**/
         --iron-icon-width: 24px;
         --iron-icon-height: 24px;
         padding-right: 10px;
@@ -404,10 +388,26 @@
           display: none;
         }
 
-        #logoandname {
-          display:block;
-        }
       }
+			
+			paper-item {
+				--paper-item {
+					padding: 0;
+					margin: 0;
+				}
+			}
+			paper-listbox {
+				--paper-listbox {
+					padding: 0;
+					margin: 0;
+				}
+			}
+			paper-dialog {
+				--paper-dialog {
+					padding: 0;
+					margin: 0;
+				}
+			}
     </style>
 		
 
@@ -418,21 +418,25 @@
 		<div id="sideMenu" on-transitionend="_sideMenuTransitionend">
 			<div id="menucontent">
 				<div id="brand-menu" class="gradient">
-					<iron-icon id="githublogo" icon="vaadin:coins"></iron-icon>
-					<span>Swap</span>
-				</div>
-				<div id="logoandname">
 					<!---- >
-					<img id="logo" src="./images/board-icon-darkbg.svg">
-					<div id="productname">Vaadin Board</div>
+					<iron-icon id="githublogo" icon="vaadin:coins"></iron-icon>
+					<!---- >
+					<span>Swap</span>
 					<!---->
-					<img id="logo" src="//uinames.com/api/photos/female/12.jpg">
-					<div id="productname">
-						Donna Morgan
-						<iron-icon icon="vaadin:angle-down" class="drop-arrow"></iron-icon>
-					</div>
+					<img src="./images/logo.svg" alt="logo" id="logo" />
 				</div>
-				<paper-icon-button id="closeMenu" icon="vaadin:close" on-click="_closeMenu"></paper-icon-button>
+				
+				<user-action-module>
+					<!-- Default content -->
+					<!---- >
+					<user-dropdown-trigger slot="trigger"></user-dropdown-trigger>
+					<!---- >
+					<user-dropdown-content slot="content"></user-dropdown-content>
+					<!---->
+				</user-action-module>
+				
+				<paper-icon-button id="closeMenu" icon="vaadin:close" on-tap="_closeMenu"></paper-icon-button>
+				
 				<iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
 					<a name="view-dashboard" href="#/view-dashboard" xname="row-types" xhref="#/row-types">
 						<paper-icon-button icon="vaadin:dashboard"></paper-icon-button>
@@ -507,7 +511,11 @@
           }
         };
       }
-
+			
+			constructor() {
+				super();
+			}
+			
       static get observers() {
         return [
           '_routePageChanged(routeData.page)',
@@ -520,9 +528,11 @@
       }
 
       _routePageChanged(page) {
-        // Polymer 2.0 will call with `undefined` on initialization.
+        //console.log('page', page);
+        
+				// Polymer 2.0 will call with `undefined` on initialization.
         // Ignore until we are properly called with a string.
-        if (page === undefined) {
+				if (page === undefined) {
           return;
         }
 
@@ -530,13 +540,13 @@
         // Deault to 'view1' in that case.
         //this.page = page || 'row-types';
 				// Edit
-        this.page = page || 'view-dashboard';
+        this.set('page', page ? page : 'view-dashboard');
 				// endEdit
       }
 
       _pageChanged(page) {
-        // Load page import on demand. Show 404 page if fails
 				//console.log('page', page);
+        // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl = this.resolveUrl(['app-views/',  page, '/', page, '.html'].join(''));
         Polymer.importHref(resolvedPageUrl, null,
           this._showPage404.bind(this), true);
@@ -556,6 +566,11 @@
         this.$.curtain.classList.remove('open');
         this.$.sideMenu.classList.remove('open');
       }
+			
+			/* Edit */
+
+			/* endEdit */
+			
     }
 
     window.customElements.define(MyApp.is, MyApp);

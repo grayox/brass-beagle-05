@@ -1,0 +1,73 @@
+<!---- >
+Copyright (c) 2015-2017 Atlas Laboratories (atlaslive@gmail.com) - All rights reserved.
+Read full copyright notice and disclaimer contained in file labeled copyright-notice.md located in the root directory.
+<!---->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../redux-store/redux-store.html">
+
+<link rel="import" href="../../custom-behaviors/user-setter-behavior.html">
+
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../../bower_components/neon-animation/neon-animation.html">
+
+<!---- >
+<link rel="import" href="../../../bower_components/vaadin-board/vaadin-board.html">
+
+<!---- >
+<link rel="import" href="../../../bower_components/vaadin-board/vaadin-board.html">
+<!---->
+<link rel="import" href="../../app-head/margin-content.html">
+
+<link rel="import" href="../../custom-styles/list-view-styles.html">
+
+
+<dom-module id="view-dashboard">
+	<template>
+		<style include="list-view-styles"></style>
+		
+		<div class="horizontal layout container">
+      <div class="margin container">
+				<margin-content></margin-content>
+			</div>
+			<h1>Dashboard</h1>
+			<!---- >
+      <vaadin-board>
+        <vaadin-board-row>
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+        </vaadin-board-row>
+        <vaadin-board-row>
+          <div>4</div>
+          <div>5</div>
+        </vaadin-board-row>
+      </vaadin-board>
+			<!---->
+    </div>
+		
+	</template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'view-dashboard',
+				behaviors: [
+					ReduxBehavior,
+					AsyncActionsBehavior,
+					MyBehaviors.UserSetterBehavior,
+					Polymer.NeonAnimationRunnerBehavior,
+					Polymer.IronResizableBehavior,
+				],
+				properties: {
+					loading: {
+						type: Boolean,
+						value: function() {
+							return false;
+						},
+					},
+				},
+      });
+		})();
+  </script>
+</dom-module>

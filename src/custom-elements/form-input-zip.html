@@ -1,0 +1,64 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../custom-behaviors/zip-code-api-behavior.html">
+
+<dom-module id="form-input-zip">
+  <template>
+		<style>
+			div[prefix] {
+				font-weight: 900;
+				opacity: 1;
+			}
+			div[suffix] {
+				font-weight: 100;
+				opacity: 0.5;
+			}
+			.checkmark {
+				color: lightgreen;
+			}
+			.exmark {
+				color: red;
+			}
+		</style>
+	  <paper-input id="create-zip"
+	  						 name="zip"
+	  						 xis="iron-input"
+	  						 xprevent-invalid-input
+	  						 xallowed-pattern="[0-9]"
+	  						 class="align-left xwide"
+	  						 label="Zip Code"
+	  						 value="{{zipCode}}"
+	  						 xtype="number"
+	  						 type="string"
+	  						 xmin="1000"
+	  						 xmax="99"
+	  						 xstep="1000"
+	  						 xlength="55"
+	  						 xrequired
+	  						 xmaxlength="2"
+	  						 xtype="text"
+	  						 xpattern="\d*"
+	  						 xdisabled$="[[!isNew]]"
+	  						 >
+	  	<!---->
+	  	<div prefix class="checkmark" hidden$="[[!zipValid]]">&#10003;</div>
+			<div prefix class="exmark" hidden$="[[zipValid]]">&times;</div>
+	  	<!---->
+	  	<div suffix>[[zipCityStateCounty]]</div>
+	  	<!---->
+	  </paper-input>
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'form-input-zip',
+				behaviors: [
+					MyBehaviors.ZipCodeApiBehavior,
+				],				
+      });
+    })();
+  </script>
+</dom-module>
